@@ -21,14 +21,16 @@ public class BadGuyBrain : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("PlayerShip");
-        state = BadGuyState.Idling;
+        state = BadGuyState.Attacking;
         homePos = this.transform.position;
+
+        StartCoroutine(SeekPlayer());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(transform.position == homePos) { state = BadGuyState.Idling; }
+        //if(transform.position == homePos) { state = BadGuyState.Idling; }
 
         switch(state)
         {
@@ -65,10 +67,13 @@ public class BadGuyBrain : MonoBehaviour
 
     IEnumerator SeekPlayer()
     {
-        yield return new WaitForSeconds(timeBetweenStates);
-        state = BadGuyState.Attacking;
-        yield return new WaitForSeconds(timeBetweenStates);
-        state = BadGuyState.Returning;
+        while(true)
+        {
+            yield return new WaitForSeconds(timeBetweenStates);
+            state = BadGuyState.Attacking;
+            yield return new WaitForSeconds(timeBetweenStates);
+            state = BadGuyState.Returning;
+        }
     }
 
     public void Despawn()
